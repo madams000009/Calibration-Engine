@@ -163,6 +163,11 @@ cython_debug/
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
+correction_factor_pm2_5.py
+correction_factor_pm10.py
+correction-factor.ipynb/
+make_API_call_to_calibrate.ipynb/
 
-assets/
-templates/
+
+
+
