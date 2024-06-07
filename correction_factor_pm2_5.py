@@ -3,6 +3,7 @@ import pandas as pd
 import pickle
 import gzip
 import os
+import boto3 
 
 # Get the current directory of the file
 current_dir = os.path.dirname(__file__)
@@ -21,6 +22,12 @@ def main(df):
     # Predict on test set
     holdout_pred1 = predict_model(best1)
 
+    s3 = boto3.client('s3')
+    s3_bucket_name = 'low-cost-air-sensor-calibration-engine'
+    model_path_s3_key = 'assets/correction_factor_random_forest_sensor960-pm2_5-28-May-2024.pkl'
+    compressed_model_path_s3_key = 'assets/model_pm2_5.pkl.gz'
+
+
     # Construct the full paths to the model file and compressed file
     model_save_path = os.path.join(current_dir, 'assets', 'correction_factor_random_forest_sensor960-pm2_5-28-May-2024')
     model_path = os.path.join(current_dir, 'assets', 'correction_factor_random_forest_sensor960-pm2_5-28-May-2024.pkl')
@@ -29,8 +36,14 @@ def main(df):
     # Save the best model
     save_model(best1, model_save_path)
 
+    # Save the best model to s3
+    s3.upload_file(model_path, s3_bucket_name, model_path_s3_key)
+
     # Compress and save the model
     compress_pickle_gzip(compressed_file_path, model_path)
+
+    # save Compressed model to s3
+    s3.upload_file(compressed_file_path, s3_bucket_name, compressed_model_path_s3_key)
 
 if __name__ == "__main__":
     # Construct the path to the CSV file

@@ -164,4 +164,5 @@ cython_debug/
 !.elasticbeanstalk/*.global.yml
 
 
-assets/*.pkl/
+assets/
+templates/
